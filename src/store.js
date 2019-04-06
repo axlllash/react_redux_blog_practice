@@ -1,10 +1,12 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { reducer as appBlogReducer } from './APP_blog';
 import { reducer as userReducer } from './user';
+import {reducer as headerReducer } from './shell/components/header';
 
 const reducer = combineReducers({
-  'APP_blog': appBlogReducer,
-  'user': userReducer
+  APP_blog: appBlogReducer,
+  user: userReducer,
+  header:headerReducer
 });
 
 const middlewares = [];
