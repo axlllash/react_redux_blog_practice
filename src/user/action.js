@@ -1,8 +1,7 @@
+import { fakeFetchForLogin as fetch } from '../fake';
+import { url } from '../constants';
+
 import * as actionTypes from './actionTypes';
-
-import { fakeFetchForLogin as fetch } from '../../fake';
-
-import { url } from '../../constants';
 
 //设置三个模块变量，以防止请求竞争
 let
@@ -10,31 +9,34 @@ let
   currentRegiterReqId = 0,
   currentLogoutReqId = 0;
 
+//提示用户登陆成功所需要的时间
+const loginBeforeSuccessTime = 2000;
+
 //一个配合上面设置的简单公用方法
-const dispatchIfValid = (dispatch, reqId) => (action,currenReqId) => {
+const dispatchIfValidPublic = (dispatch, reqId) => (action, currentReqId) => {
   if (reqId === currentReqId) {
     return dispatch(action);
   }
 }
 
 //正常的登录，传递给mapDispatchToProps的
-export const login = (userName, password,firstLoadedBool) => (dispatch, getState) => {
+export const login = (userName, password, firstLoadedBool,callback) => (dispatch, getState) => {
   const loginReqId = ++currentLoginReqId;
 
-  const dispatchIfValid=dispatchIfValid(dispatch,loginReqId);
+  const dispatchIfValid = dispatchIfValidPublic(dispatch, loginReqId);
 
   //开始分发loginStart的action creators
-  dispatchIfValid(loginStart(),currentLoginReqId);
+  dispatchIfValid(loginStart(), currentLoginReqId);
 
   //开始向服务器端申请登录
-  (firstLoadedBool?fetch(url.login):fetch(url.login, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userName, password })
-    }))
-    .then(res => {
+  (firstLoadedBool ? fetch(url.login) : fetch(url.login, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ userName, password })
+  }))
+  .then(res => {
       if (res.ok) {
         return res.json();
       } else {
@@ -43,15 +45,20 @@ export const login = (userName, password,firstLoadedBool) => (dispatch, getState
     })
     .then(data => {
       if (Number(data.code) === 1) {
-        dispatchIfValid(loginSuccess(data.userName, data.userData),currentLoginReqId);
+        dispatchIfValid(loginBeforeSuccess(), currentLoginReqId);
+        setTimeout(() => {
+          dispatchIfValid(loginSuccess(data.userName, data.userData), currentLoginReqId)
+          if(typeof callback==='function'){
+            callback();
+          }
+        },loginBeforeSuccessTime);
       } else {
         return Promise.reject(data.code);
       }
     })
     .catch(err => {
       console.dir(err);
-      dispatchIfValid();
-      dispatchIfValid(loginFail(),currentLoginReqId);
+      dispatchIfValid(loginFail(), currentLoginReqId);
     });
 };
 
@@ -61,20 +68,20 @@ export const loginStart = () => ({
 });
 
 export const loginSuccess = (userName, userData) => ({
-  type: actionTypes.USER_LOGIN_SUCESS,
+  type: actionTypes.USER_LOGIN_SUCCESS,
   payload: {
     userName,
     userData
   }
 });
 
-export consst loginBeforeSuccess=()=>({
-  type:actionTypes.USER_LOGIN_BEFORE_SUCCESS,
+export const loginBeforeSuccess = () => ({
+  type: actionTypes.USER_LOGIN_BEFORE_SUCCESS,
 });
 
 export const loginFail = (error) => ({
   type: actionTypes.USER_LOGIN_FAIL,
-  payload:{
+  payload: {
     error
   }
 });

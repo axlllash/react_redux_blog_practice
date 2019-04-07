@@ -8,7 +8,7 @@ let htmlWebpackPlugin=new HtmlWebpackPlugin({
 
 module.exports={
   mode:'development',
-  devtool:'cheap-module-eval-souce-map',
+  devtool:'souce-map',
   entry:'./src/index.js',
   output:{
     path:path.resolve(__dirname,'dist'),

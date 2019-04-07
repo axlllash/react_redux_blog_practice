@@ -1,34 +1,26 @@
 import React from 'react';
 
 import reducer from './reducer';
+import Login from './components/login';
+import Register from './components/register';
+import Logout from './components/logout';
 
-import {
-  status as headerViewStatus
-} from '../shell/components/header/actions';
+import {status as headerViewStatus} from '../shell/components/header';
 
 
-const User({viewStatus})=>(
-  let Component;
+const User=({viewStatus})=>{
   switch (viewStatus) {
-    case headerViewStatus.HEADERV_VIEW_LOGIN:
-      Component=<Login />
-      break;
-    case headerViewStatus.HEADERV_VIEW_REGISTER:
-      Component=<Register />
-      break;
-    case headerViewStatus.HEADERV_VIEW_LOGOUT:
-      Component=<Logout />
-      break;
-    case headerViewStatus.HEADERV_VIEW_NONE:
+    case headerViewStatus.HEADER_VIEW_STATUS_LOGIN:
+      return <Login />;
+    case headerViewStatus.HEADER_VIEW_STATUS_REGISTER:
+      return <Register />;
+    case headerViewStatus.HEADER_VIEW_STATUS_LOGOUT:
+      return <Logout />
+    case headerViewStatus.HEADER_VIEW_STATUS_NONE:
     default:
-      Component=null;
-      break;
+      return null;
   }
-
-  return (
-    <Component />
-  );
-);
+};
 
 export default User;
 

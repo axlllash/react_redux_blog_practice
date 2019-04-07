@@ -1,9 +1,9 @@
 import React from 'react';
-import Header from './views/header';
-import Content from './views/content';
-import Footer from './views/footer';
+import Header from './components/header';
+import Content from './components/content';
+import Footer from './components/footer';
 
-export default function shell(){
+export default function Shell(){
   return (
     <div>
       <Header />

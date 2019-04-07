@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actionCreators from '../constants';
+import User from '../../../user';
+
+import * as actionCreators from './actions';
 
 class Header extends Component {
   constructor(props) {
@@ -13,19 +15,23 @@ class Header extends Component {
       <header className="header">
         <User viewStatus={this.props.viewStatus} />
         {
-          userName?
-          (<p>`${userName}你好!`</p>
-          <div role="logoutButton"
+          this.props.userName?
+          [<p key="hello">{`${this.props.userName}你好!`}</p>,
+          <div 
+            key="logoutButton"
+            role="logoutButton"
             onClick={this.props.changeToLogoutViewStatus}>注销
-          </div>):
-          (<div 
+          </div>]:
+          [<div 
+            key="loginButton"
             role="loginButton" 
             onClick={this.props.changeToLoginViewStatus}>登录
-          </div>
+          </div>,
           <div 
+            key="registerButton"
             role="registerButton" 
             onClick={this.props.changeToRegisterViewStatus}>注册
-          </div>)
+          </div>]
         }
       </header>
     );

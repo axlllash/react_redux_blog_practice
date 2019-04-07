@@ -1,51 +1,44 @@
-import {
-  TOGGLE_HEADER_STATUS_NONE,
-  TOGGLE_HEADER_STATUS_LOGIN,
-  TOGGLE_HEADER_STATUS_REGISTER,
-  TOGGLE_HEADER_STATUS_LOGOUT
-} from '.actionTypes';
+import * as actionTypes from './actionTypes';
 
-import {
-  HEADER_VIEW_STATUS_NONE,
-  HEADER_VIEW_STATUS_LOGIN,
-  HEADER_VIEW_STATUS_REGISTER,
-  HEADER_VIEW_STATUS_LOGOUT
-} from '.constants'
+import * as status from './constants';
 
 const initialState={
-  viewStatus:HEADER_VIEW_STATUS_NONE
+  viewStatus:status.HEADER_VIEW_STATUS_NONE
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case HEADER_VIEW_STATUS_LOGIN:
+    case actionTypes.TOGGLE_HEADER_STATUS_LOGIN:
       {
         return {
-          viewStatus: HEADER_VIEW_STATUS_NONE,
-          ...state
+          ...state,
+          viewStatus: status.HEADER_VIEW_STATUS_LOGIN,       
         }
       }
-    case HEADER_VIEW_STATUS_REGISTER:
+    case actionTypes.TOGGLE_HEADER_STATUS_REGISTER:
       {
         return {
-          viewStatus: HEADER_VIEW_STATUS_REGISTER,
-          ...state
+          ...state,
+          viewStatus: status.HEADER_VIEW_STATUS_REGISTER,
         }
       }
-    case HEADER_VIEW_STATUS_LOGOUT:
+    case actionTypes.TOGGLE_HEADER_STATUS_LOGOUT:
       {
         return {
-          viewStatus: HEADER_VIEW_STATUS_LOGOUT,
-          ...state
+          ...state,
+          viewStatus: status.HEADER_VIEW_STATUS_LOGOUT,
         }
       }
-    case HEADER_VIEW_STATUS_NONE:
-    default:
+    case actionTypes.TOGGLE_HEADER_STATUS_NONE:
       {
         return{
-          viewStatus:HEADER_VIEW_STATUS_NONE,
-          ...state
+          ...state,
+          viewStatus:status.HEADER_VIEW_STATUS_NONE,
         };
+      }
+    default:
+      {
+        return state;
       }
   }
 }
